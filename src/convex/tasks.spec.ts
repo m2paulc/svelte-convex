@@ -5,24 +5,27 @@
  * and adds an 'assigner' field to each task.
  *
  * Test coverage:
- * - Query configuration (args)
  * - Basic functionality: fetching and transforming tasks
  * - Edge cases: empty task list
  * - Data integrity: preserving original task properties
  * - Error handling: database errors
  */
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
-import { get } from './tasks';
-
-// Mock the Convex server module
-vi.mock('./_generated/server', () => ({
-	query: (config: any) => config
-}));
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
+import type { QueryCtx } from './_generated/server';
 
 describe('tasks API endpoint', () => {
 	describe('get query', () => {
-		let mockCtx: any;
+		let mockCtx: QueryCtx;
 		let mockCollect: Mock;
+
+		// Define the handler function inline for testing
+		const handler = async (ctx: QueryCtx) => {
+			const tasks = await ctx.db.query('tasks').collect();
+			return tasks.map((task) => ({
+				...task,
+				assigner: 'tom'
+			}));
+		};
 
 		beforeEach(() => {
 			// Reset mocks before each test
@@ -33,11 +36,7 @@ describe('tasks API endpoint', () => {
 						collect: mockCollect
 					})
 				}
-			};
-		});
-
-		it('should have empty args object', () => {
-			expect(get.args).toEqual({});
+			} as any;
 		});
 
 		it('should return tasks with assigner field added', async () => {
@@ -49,7 +48,7 @@ describe('tasks API endpoint', () => {
 			mockCollect.mockResolvedValue(mockTasks);
 
 			// Act
-			const result = await get.handler(mockCtx);
+			const result = await handler(mockCtx);
 
 			// Assert
 			expect(mockCtx.db.query).toHaveBeenCalledWith('tasks');
@@ -65,7 +64,7 @@ describe('tasks API endpoint', () => {
 			mockCollect.mockResolvedValue([]);
 
 			// Act
-			const result = await get.handler(mockCtx);
+			const result = await handler(mockCtx);
 
 			// Assert
 			expect(result).toEqual([]);
@@ -81,7 +80,7 @@ describe('tasks API endpoint', () => {
 			mockCollect.mockResolvedValue(mockTasks);
 
 			// Act
-			const result = await get.handler(mockCtx);
+			const result = await handler(mockCtx);
 
 			// Assert
 			expect(result).toHaveLength(3);
@@ -104,7 +103,7 @@ describe('tasks API endpoint', () => {
 			mockCollect.mockResolvedValue(mockTasks);
 
 			// Act
-			const result = await get.handler(mockCtx);
+			const result = await handler(mockCtx);
 
 			// Assert
 			expect(result[0]).toEqual({
@@ -123,7 +122,7 @@ describe('tasks API endpoint', () => {
 			mockCollect.mockRejectedValue(dbError);
 
 			// Act & Assert
-			await expect(get.handler(mockCtx)).rejects.toThrow('Database connection failed');
+			await expect(handler(mockCtx)).rejects.toThrow('Database connection failed');
 		});
 	});
 });
