@@ -4,8 +4,6 @@
 	import { api } from '../convex/_generated/api';
 	import type { Doc } from '../convex/_generated/dataModel';
 
-	// let newTask = $state('');
-
 	const query = useQuery(api.tasks.get, {});
 	const client = useConvexClient();
 
@@ -20,12 +18,14 @@
 		}
 	}
 
-	function addTask() {
-		// convex mutation to add newTask
-		const data = Object.fromEntries(new FormData(event?.target as HTMLFormElement).entries());
-		client.mutation(api.tasks.addNewTask, {
-			text: data.newTask as string
-		});
+	async function addTask(taskText: string) {
+		try {
+			await client.mutation(api.tasks.addNewTask, {
+				text: taskText
+			});
+		} catch (error) {
+			console.error('Failed to add Task: ', error);
+		}
 	}
 </script>
 
