@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { useConvexClient, useQuery } from 'convex-svelte';
+	import TaskForm from '../components/task-form.svelte';
 	import { api } from '../convex/_generated/api';
 	import type { Doc } from '../convex/_generated/dataModel';
+
+	// let newTask = $state('');
 
 	const query = useQuery(api.tasks.get, {});
 	const client = useConvexClient();
@@ -16,10 +19,19 @@
 			console.error('Failed to toggle Complete: ', error);
 		}
 	}
+
+	function addTask() {
+		// convex mutation to add newTask
+		const data = Object.fromEntries(new FormData(event?.target as HTMLFormElement).entries());
+		client.mutation(api.tasks.addNewTask, {
+			text: data.newTask as string
+		});
+	}
 </script>
 
 <main class="container">
 	<h1>Welcome to SvelteKit with Convex</h1>
+	<TaskForm {addTask} />
 	{#if query.isLoading}
 		Loading...
 	{:else if query.error}
@@ -37,7 +49,7 @@
 								onchange={() => toggleIsComplete(task)}
 							/>
 							<span class="task-item">{task.text}</span>
-							<span> - Assigned by: {task.assigner}</span>
+							<span><em> - Assigned at: {task.assigner}</em></span>
 						</label>
 					</li>
 				{/each}
