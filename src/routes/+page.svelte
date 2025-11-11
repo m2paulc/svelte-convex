@@ -61,7 +61,11 @@
 						<span class="task-item">{task.text}</span>
 						<span><em> - Assigned: {task.assigner}</em></span>
 					</label>
-					<button onclick={() => removeTask(task._id)} class="remove-button"><Trash2Icon /></button>
+					<button
+						onclick={() => removeTask(task._id)}
+						class="remove-button"
+						aria-label="remove task"><Trash2Icon /></button
+					>
 				</article>
 			{/each}
 		</fieldset>
