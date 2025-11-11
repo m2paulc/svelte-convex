@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { useConvexClient, useQuery } from 'convex-svelte';
+	import { fade } from 'svelte/transition';
 	import TaskForm from '../components/task-form.svelte';
 	import { api } from '../convex/_generated/api';
 	import type { Doc } from '../convex/_generated/dataModel';
@@ -38,22 +39,20 @@
 		failed to Load: {query.error.toString()}
 	{:else}
 		<fieldset>
-			<ul>
-				{#each query.data as task}
-					<li>
-						<label>
-							<input
-								type="checkbox"
-								name={task.text}
-								checked={task.isCompleted}
-								onchange={() => toggleIsComplete(task)}
-							/>
-							<span class="task-item">{task.text}</span>
-							<span><em> - Assigned at: {task.assigner}</em></span>
-						</label>
-					</li>
-				{/each}
-			</ul>
+			{#each query.data as task}
+				<article class="listing" transition:fade>
+					<label>
+						<input
+							type="checkbox"
+							name={task.text}
+							checked={task.isCompleted}
+							onchange={() => toggleIsComplete(task)}
+						/>
+						<span class="task-item">{task.text}</span>
+						<span><em> - Assigned at: {task.assigner}</em></span>
+					</label>
+				</article>
+			{/each}
 		</fieldset>
 	{/if}
 </main>
@@ -71,5 +70,16 @@
 	}
 	.task-item {
 		font-weight: bold;
+	}
+	.listing {
+		margin: 1rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 1.2rem;
+		font-weight: bold;
+		padding: 6px;
+		background-color: burlywood;
+		border-radius: 5px;
 	}
 </style>
