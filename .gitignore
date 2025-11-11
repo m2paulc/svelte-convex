@@ -25,3 +25,6 @@ vite.config.ts.timestamp-*
 
 # opencode
 opencode-session*
+
+# vscode
+/.vscode

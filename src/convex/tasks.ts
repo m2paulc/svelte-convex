@@ -2,16 +2,13 @@ import { v } from 'convex/values';
 import { formatAsISO } from '../lib/utils/utils';
 import { mutation, query } from './_generated/server';
 
-const eventTime = new Date();
-const dated = formatAsISO(eventTime);
-
 export const get = query({
 	args: {},
 	handler: async (ctx) => {
 		const tasks = await ctx.db.query('tasks').collect();
 		return tasks.map((task) => ({
 			...task,
-			assigner: dated
+			assigner: formatAsISO(new Date(task._creationTime))
 		}));
 	}
 });
