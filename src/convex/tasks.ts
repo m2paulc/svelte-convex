@@ -1,4 +1,5 @@
-import { query } from './_generated/server';
+import { v } from 'convex/values';
+import { mutation, query } from './_generated/server';
 
 export const get = query({
 	args: {},
@@ -8,5 +9,15 @@ export const get = query({
 			...task,
 			assigner: 'tom'
 		}));
+	}
+});
+
+export const toggleTaskComplete = mutation({
+	args: { _id: v.id('tasks'), isCompleted: v.boolean() },
+	handler: async (ctx, { _id, isCompleted }) => {
+		if (_id) {
+			const toggleComplete = !isCompleted;
+			await ctx.db.patch(_id, { isCompleted: toggleComplete });
+		}
 	}
 });
