@@ -92,6 +92,8 @@
 		padding: 6px;
 		background-color: burlywood;
 		border-radius: 5px;
+		text-wrap: balance;
+		overflow-wrap: break-word;
 	}
 	.remove-button {
 		background-color: brown;
