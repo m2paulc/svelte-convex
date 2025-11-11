@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { Trash2Icon } from '@lucide/svelte';
 	import { useConvexClient, useQuery } from 'convex-svelte';
 	import { fade } from 'svelte/transition';
 	import TaskForm from '../components/task-form.svelte';
 	import { api } from '../convex/_generated/api';
-	import type { Doc } from '../convex/_generated/dataModel';
+	import type { Doc, Id } from '../convex/_generated/dataModel';
 
 	const query = useQuery(api.tasks.get, {});
 	const client = useConvexClient();
@@ -28,6 +29,15 @@
 			console.error('Failed to add Task: ', error);
 		}
 	}
+
+	async function removeTask(id: Id<'tasks'>) {
+		try {
+			// convex mutation
+			await client.mutation(api.tasks.removeTask, { id });
+		} catch (error) {
+			console.error('Failed to remove task: ', error);
+		}
+	}
 </script>
 
 <main class="container">
@@ -49,8 +59,9 @@
 							onchange={() => toggleIsComplete(task)}
 						/>
 						<span class="task-item">{task.text}</span>
-						<span><em> - Assigned at: {task.assigner}</em></span>
+						<span><em> - Assigned: {task.assigner}</em></span>
 					</label>
+					<button onclick={() => removeTask(task._id)} class="remove-button"><Trash2Icon /></button>
 				</article>
 			{/each}
 		</fieldset>
@@ -81,5 +92,10 @@
 		padding: 6px;
 		background-color: burlywood;
 		border-radius: 5px;
+	}
+	.remove-button {
+		background-color: brown;
+		color: aliceblue;
+		outline: none;
 	}
 </style>
