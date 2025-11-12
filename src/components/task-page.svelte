@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { api } from '$convex/_generated/api';
 	import { authClient } from '$lib/auth-client';
 	import { Trash2Icon } from '@lucide/svelte';
@@ -56,7 +57,10 @@
 		const result = await authClient.signOut();
 		if (result.error) {
 			console.error('Sign out error:', result.error);
+			return;
 		}
+		// Force re-run of +page.server.ts load function
+		await goto('/', { invalidateAll: true }); // invalidate all
 	}
 </script>
 

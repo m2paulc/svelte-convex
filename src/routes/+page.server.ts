@@ -2,7 +2,10 @@ import { api } from '$convex/_generated/api';
 import { createConvexHttpClient } from '@mmailaender/convex-better-auth-svelte/sveltekit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, depends }) => {
+	// load function
+	depends('app:auth');
+
 	// Only fetch user if token exists
 	if (!locals.token) {
 		return { currentUser: null };

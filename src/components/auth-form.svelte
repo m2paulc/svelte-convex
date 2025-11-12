@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { authClient } from '$lib/auth-client';
 
 	// Sign in/up form state
@@ -40,6 +41,9 @@
 					}
 				);
 			}
+
+			// Force page reload to fetch fresh user data
+			await goto('/', { invalidateAll: true });
 		} catch (error) {
 			console.error('Authentication error: ', error);
 		}
@@ -57,7 +61,11 @@
 </script>
 
 <!-- Sign-In Component -->
-<div class="flex w-full max-w-md flex-col gap-4 rounded-lg bg-white p-6 shadow-md">
+<div class="m-auto flex w-full max-w-md flex-col gap-4 rounded-lg bg-white p-6 shadow-md">
+	<div>
+		<!-- Logo goes here -->
+		<p>NBG Application</p>
+	</div>
 	<h2 class="mb-6 text-center text-2xl font-bold text-gray-800">
 		{showSignIn ? 'Sign In' : 'Sign Up'}
 	</h2>
