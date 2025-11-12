@@ -79,9 +79,6 @@
 		margin-top: 1.5rem;
 	}
 	h1 {
-		--pico-font-family: Arial, sans-serif;
-		--pico-font-weight: 400;
-		--pico-typography-spacing-vertical: 0.5rem;
 		text-align: center;
 		padding: 1rem;
 	}
