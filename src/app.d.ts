@@ -3,9 +3,14 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			token: string | undefined;
+		}
 		// interface PageData {}
-		// interface PageState {}
+		interface PageState {
+			// Track which dialog is open in history state
+			dialog?: 'user-profile' | 'organization-profile';
+		}
 		// interface Platform {}
 	}
 }

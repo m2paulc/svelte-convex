@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { PUBLIC_CONVEX_URL } from '$env/static/public';
 	import favicon from '$lib/assets/favicon.svg';
+	import { authClient } from '$lib/auth-client';
+	import { createSvelteAuthClient } from '@mmailaender/convex-better-auth-svelte/svelte';
 	import '@picocss/pico';
 	import { setupConvex } from 'convex-svelte';
+	import '../app.css';
+
+	createSvelteAuthClient({ authClient });
 
 	let { children } = $props();
 
