@@ -58,8 +58,10 @@
 							checked={task.isCompleted}
 							onchange={() => toggleIsComplete(task)}
 						/>
-						<span class="task-item">{task.text}</span>
-						<span><em> - Assigned: {task.assigner}</em></span>
+						<span class:completed={task.isCompleted}>
+							<span class="task-item">{task.text}</span>
+							<span><em> - Assigned: {task.assigner}</em></span>
+						</span>
 					</label>
 					<button
 						onclick={() => removeTask(task._id)}
@@ -82,6 +84,9 @@
 		--pico-typography-spacing-vertical: 0.5rem;
 		text-align: center;
 		padding: 1rem;
+	}
+	.completed {
+		text-decoration: line-through;
 	}
 	.task-item {
 		font-weight: bold;
